@@ -32,9 +32,9 @@ export const setupAxiosAuth = (token: string | null) => {
   }
 };
 
-export const initAuthAtom = atom(null, async (get, set) => {
-  const token = get(tokenAtom);
-
+export const initAuthAtom = atom(null, async (_, set) => {
+  const token = localStorage.getItem("token");
+  console.log({ token });
   if (!token) {
     set(loadingAtom, false);
     return;
@@ -42,15 +42,16 @@ export const initAuthAtom = atom(null, async (get, set) => {
 
   try {
     setupAxiosAuth(token);
-    const response = await axios.get("http://localhost:8080/profile");
-
+    const response = await axios.get(
+      "https://n8wks000s84gsw8go4cggckk.softver.cc/profile"
+    );
     if (response.data?.user) {
       set(userAtom, response.data.user);
     } else {
-      set(tokenAtom, null);
+      // set(tokenAtom, null);
     }
   } catch {
-    set(tokenAtom, null);
+    // set(tokenAtom, null);
   } finally {
     set(loadingAtom, false);
   }
@@ -59,22 +60,20 @@ export const initAuthAtom = atom(null, async (get, set) => {
 // Auth actions
 export const loginAtom = atom(
   null,
-  async (
-    get,
-    set,
-    { email, password }: { email: string; password: string }
-  ) => {
+  async (_, set, { email, password }: { email: string; password: string }) => {
     set(errorAtom, null);
 
     try {
-      const response = await axios.post("http://localhost:8080/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://n8wks000s84gsw8go4cggckk.softver.cc/login",
+        {
+          email,
+          password,
+        }
+      );
 
       if (response.data) {
         set(userAtom, response.data.user);
-        console.log(get(userAtom));
         set(tokenAtom, response.data.token);
         setupAxiosAuth(response.data.token);
         localStorage.setItem("token", response.data.token);
@@ -105,14 +104,19 @@ export const registerAtom = atom(
     set(errorAtom, null);
 
     try {
-      const response = await axios.post("http://localhost:8080/register", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://n8wks000s84gsw8go4cggckk.softver.cc/register",
+        {
+          email,
+          password,
+        }
+      );
 
-      if (response.data.success) {
+      if (response.data) {
         set(userAtom, response.data.user);
         set(tokenAtom, response.data.token);
+        localStorage.setItem("token", response.data.token);
+
         setupAxiosAuth(response.data.token);
         return { success: true };
       } else {

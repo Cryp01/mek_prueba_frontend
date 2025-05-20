@@ -100,7 +100,9 @@ export const fetchNotesAtom = atom(null, async (_, set) => {
       return { success: true, offline: true };
     }
 
-    const response = await axios.get("http://localhost:8080/api/notes");
+    const response = await axios.get(
+      "https://n8wks000s84gsw8go4cggckk.softver.cc/api/notes"
+    );
 
     if (response.data.success) {
       set(notesAtom, response.data.data);
@@ -162,7 +164,7 @@ export const createNoteAtom = atom(
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/notes",
+        "https://n8wks000s84gsw8go4cggckk.softver.cc/api/notes",
         noteData
       );
 
@@ -297,7 +299,7 @@ export const updateNoteAtom = atom(
       }
 
       const response = await axios.put(
-        `http://localhost:8080/api/notes/${id}`,
+        `https://n8wks000s84gsw8go4cggckk.softver.cc/api/notes/${id}`,
         noteData
       );
 
@@ -408,7 +410,7 @@ export const deleteNoteAtom = atom(
         throw new Error("Note ID is required for deletion");
       }
 
-      const url = `http://localhost:8080/api/notes/${id}${
+      const url = `https://n8wks000s84gsw8go4cggckk.softver.cc/api/notes/${id}${
         permanent ? "?permanent=true" : ""
       }`;
       const response = await axios.delete(url);
@@ -465,7 +467,7 @@ export const syncOfflineChangesAtom = atom(null, async (get, set) => {
           if (!update.localId || !update.data) continue;
 
           const response = await axios.post(
-            "http://localhost:8080/api/notes",
+            "https://n8wks000s84gsw8go4cggckk.softver.cc/api/notes",
             update.data
           );
 
@@ -491,7 +493,7 @@ export const syncOfflineChangesAtom = atom(null, async (get, set) => {
           }
 
           const response = await axios.put(
-            `http://localhost:8080/api/notes/${id}`,
+            `https://n8wks000s84gsw8go4cggckk.softver.cc/api/notes/${id}`,
             update.data
           );
 
@@ -506,7 +508,7 @@ export const syncOfflineChangesAtom = atom(null, async (get, set) => {
         } else if (update.type === "delete") {
           if (!update.id) continue;
 
-          const url = `http://localhost:8080/api/notes/${update.id}`;
+          const url = `https://n8wks000s84gsw8go4cggckk.softver.cc/api/notes/${update.id}`;
           const response = await axios.delete(url);
 
           if (response.data.success) {

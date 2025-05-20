@@ -77,7 +77,7 @@ const NoteDetailPage: React.FC = () => {
 
       if (!isLocalId && noteId && isOnline) {
         const response = await axios.get(
-          `http://localhost:8080/api/notes/${noteId}`
+          `https://n8wks000s84gsw8go4cggckk.softver.cc/api/notes/${noteId}`
         );
 
         const data = response.data;
